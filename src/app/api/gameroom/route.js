@@ -1,4 +1,4 @@
-import { db } from '@/lib/db'
+import prismadb from '@/app/lib/db';
 import { pusherServer } from '@/lib/pusher'
 
 export async function POST() {
@@ -6,7 +6,7 @@ export async function POST() {
 
   pusherServer.trigger(roomId, 'incoming-message', text)
 
-  await db.gameRoom.create({
+  await prismadb.gameRoom.create({
     data: {
       text,
       gameRoomId: roomId,

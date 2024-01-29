@@ -33,7 +33,6 @@ model GameRoom {
 
   player2   User?   @relation("Player2", fields: [player2Id], references: [id])
   player2Id String?
-  gameID Int
   games Game[] @relation("GameRoomGames")
 
 }

@@ -25,7 +25,6 @@ export async function POST(
     //         email
     //       },
     //     });
-  
       const profile = await prismadb.user.create({
                data: {
                 email,

@@ -49,7 +49,7 @@ const Navbar = () => {
                                    aria-current="page">Home</Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-900 dark:text-white hover:underline">Menu1</a>
+                                <a href="#" className="text-gray-900 dark:text-white hover:underline">Play</a>
                             </li>
                             <li>
                                 <a href="#" className="text-gray-900 dark:text-white hover:underline">Menu2</a>
