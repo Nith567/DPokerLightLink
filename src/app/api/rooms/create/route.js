@@ -13,7 +13,7 @@ export async function POST(req) {
 
     return new Response(createdRoom.id);
   } catch (error) {
-    console.error('zxErrosdfrwhy creating room:', error);
-    return new Response('sdfInternalu room  Server Error', { status: 500 });
+    console.error('while creating room:', error);
+    return new Response('Internal room  Server Error', { status: 500 });
   }
 }
