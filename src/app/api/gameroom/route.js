@@ -6,7 +6,7 @@ export async function POST() {
 
   pusherServer.trigger(roomId, 'incoming-message', text)
 
-  await prismadb.gameRoom.create({
+  await prismadb.game.create({
     data: {
       text,
       gameRoomId: roomId,

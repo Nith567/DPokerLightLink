@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 
 function page({children,params}) {
+  let roomIdInput = ''
     const router = useRouter()
 
 
@@ -12,7 +13,8 @@ const joinRoom = async (roomId) => {
   const res=  await axios.get(`/api/${params.profile}/rooms/${roomId}`);
 const vacant=await res.data;
 if(vacant===true){
-       router.push('/room/${roomId}')
+  let s=await axios.patch(`/api/${params.profile}/rooms/${roomId}`)
+       router.push(`/room/${roomId}`)
   }
 }
  const createRoom = async () => {
