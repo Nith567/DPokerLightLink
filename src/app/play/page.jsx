@@ -6,8 +6,9 @@ import { redirect } from 'next/navigation';
 import prismadb from '@/app/lib/db';
 import React from 'react'
 const  page = async() => {
+
     const session = await getServerSession(authOptions);
-    const { email } = session?.user;
+  let email=  session.user?.email
     const profile = await prismadb.user.findFirst({
         where: {
              email,
@@ -17,6 +18,7 @@ const  page = async() => {
     if (profile) {
         redirect(`/${profile.id}`);
       };
+      console.log("lapak", email)
   return (
       <div>
           hai page not found

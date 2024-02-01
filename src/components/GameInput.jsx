@@ -4,46 +4,43 @@ import axios from 'axios'
 import { FC } from 'react'
 
 const GameInput= ({ roomId }) => {
-  const [players, setPlayers] = useState({ player1: '', player2: '' });
+  const [players, setPlayers] = useState(null);
   let input = ''
 
   const sendMessage = async (text) => {
     await axios.post('/api/gameroom', { text, roomId })
   }
 
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const response = await axios.get(`/api/rooms/${roomId}`);
-        setPlayers(response.data);
-      } catch (error) {
-        console.error('Error fetching players:', error);
-      }
-    };
-
-    if (roomId) {
-      fetchPlayers();
+  const fetchPlayers = async () => {
+    try {
+      const response = await axios.get(`/api/rooms/${roomId}`);
+      const data = await response.data; // Assuming the data is directly available as an object
+      setPlayers(data);
+      console.log("Fetched Players:", data);
+    } catch (error) {
+      console.error('Error fetching players:', error);
     }
-  }, [roomId]);
+  };
 
+  useEffect(() => {
+    // Fetch players when the component mounts
+    fetchPlayers();
+  }, [roomId]); 
+  
   return (
     <div className='flex gap-2'>
-     Play the game-from GAMEINPUT JSXSDFDSF
-     <div>
+    Play the game-from GAMEINPUT JSXSDFDSF
+    <div>
       <h1>Room Page</h1>
-      <p>Room ID: {players.id}</p>
-      <p>Player 1: {players.player1.email}</p>
-      <p>Player 2: {players.player2.email}</p>
-      {/* Display other details as needed */}
+      <h2>Game Room Details</h2>
+      Vacant: {players?.player1Id}
+      ID: {players?.id}
+      Player 1 Email: {players?.player1?.email}
+      Player 2 Email: {players?.player2?.email}
     </div>
-      <input
-        onChange={({ target }) => (input = target.value)}
-        className='border border-zinc-300'
-        type='text'
-      />
-      <button onClick={() => sendMessage(input || '')}>send</button>
-    </div>
-  )
+    <button onClick={fetchPlayers}>ClicksBro</button>
+  </div>
+  );
 }
 
 export default GameInput

@@ -42,7 +42,7 @@ export default function Home() {
       goknuluknu@gufum.com
       {status === 'authenticated' ? (
         <>
-          I am in as {session?.user?.name} puka{session?.accessToken}puka
+          I am in as {session?.user?.name} {session?.accessToken}
           <div>
             hi {session?.user?.email}
           </div>

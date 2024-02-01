@@ -8,15 +8,21 @@ function page({children,params}) {
   let roomIdInput = ''
     const router = useRouter()
 
-
 const joinRoom = async (roomId) => {
-  const res=  await axios.get(`/api/${params.profile}/rooms/${roomId}`);
-const vacant=await res.data;
-if(vacant===true){
-  let s=await axios.patch(`/api/${params.profile}/rooms/${roomId}`)
-       router.push(`/room/${roomId}`)
+  try {
+let response = await axios.patch(`/api/rooms/${roomId}`, { profile: params.profile });
+router.push(`/room/${roomId}`)
+    console.log("Response data: ra ", response.data);
+
+  } catch (error) {
+    // Log and handle any errors that occur during the request
+    console.error("Error joining room:", error);
+
+    if (error.response && error.response.status === 404) {
+      console.error("Room not found. Make sure the roomId is correct.");
+    }
   }
-}
+};
  const createRoom = async () => {
     const response = await axios.post(`/api/${params.profile}/rooms`);
     const roomId = await response.data; // Assuming the server sends back the ro
