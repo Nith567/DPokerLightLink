@@ -10,8 +10,8 @@ function page({children,params}) {
 
 const joinRoom = async (roomId) => {
   try {
-let response = await axios.patch(`/api/rooms/${roomId}`, { profile: params.profile });
-router.push(`/room/${roomId}`)
+    let response = await axios.patch(`/api/rooms/${roomId}`, { profile: params.profile });
+    router.push(`/room/${roomId}`)
     console.log("Response data: ra ", response.data);
 
   } catch (error) {
@@ -24,8 +24,8 @@ router.push(`/room/${roomId}`)
   }
 };
  const createRoom = async () => {
-    const response = await axios.post(`/api/${params.profile}/rooms`);
-    const roomId = await response.data; // Assuming the server sends back the ro
+    const response = await axios.post(`/api/${params.profile}/room`);
+    const roomId = await response.data;
         router.push(`/room/${roomId}`)
       }
   

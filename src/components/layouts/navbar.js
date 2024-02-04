@@ -17,7 +17,7 @@ const Navbar = () => {
                     <Link href="/" className="flex items-center">
                         <img src="https://flowbite.com/docs/images/logo.svg" className="h-8 mr-3" alt="Flowbite Logo"/>
                         <span
-                            className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">NextAuthApp</span>
+                            className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">DicePokerGame</span>
                     </Link>
                     {status === 'authenticated' ? (
                         <>
@@ -49,13 +49,7 @@ const Navbar = () => {
                                    aria-current="page">Home</Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-900 dark:text-white hover:underline">Play</a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-900 dark:text-white hover:underline">Menu2</a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-900 dark:text-white hover:underline">Menu3</a>
+                                <a href="/play" className="text-gray-900 dark:text-white hover:underline">Play</a>
                             </li>
                         </ul>
                     </div>

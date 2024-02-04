@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/app/lib/db';
 export async function POST(req,{params}) {
   try {
-    console.log('pajki ', params)
-    const { profile } = params;
+
+    const { profile} = params;
+    console.log(" lnaja ", profile)
     const createdRoom = await prismadb.gameRoom.create({
       data: {
-        player1Id:profile
+        player1Id:profile,
       }
     });
 
@@ -16,3 +17,7 @@ export async function POST(req,{params}) {
     return new Response('Internal room  Server Error', { status: 500 });
   }
 }
+
+
+
+

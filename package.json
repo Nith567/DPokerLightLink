@@ -15,6 +15,9 @@
     "@moonup/moon-sdk": "^0.0.36",
     "@moonup/moon-types": "^0.0.18",
     "@prisma/client": "^5.8.1",
+    "@react-three/drei": "9.92.0",
+    "@react-three/fiber": "8.15.12",
+    "@types/three": "0.158.3",
     "autoprefixer": "10.4.16",
     "axios": "^1.6.7",
     "flowbite": "^1.8.1",
@@ -26,9 +29,13 @@
     "qs": "^6.11.2",
     "querystring": "^0.2.1",
     "react": "18.2.0",
+    "react-dice-complete": "^2.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.46.2",
+    "react-hot-toast": "^2.4.1",
     "tailwindcss": "3.3.3",
+    "three": "0.159.0",
+    "uuid": "^9.0.1",
     "yup": "^1.2.0"
   },
   "devDependencies": {

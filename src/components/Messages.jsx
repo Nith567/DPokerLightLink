@@ -3,6 +3,7 @@ import { pusherClient } from '@/app/lib/pusher'
 import { FC, useEffect, useState } from 'react'
 
 const Messages = ({ initialMessages, roomId }) => {
+
   const [incomingMessages, setIncomingMessages] = useState([])
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Messages = ({ initialMessages, roomId }) => {
   return (
     <div>
         <div>
-            hello from Mesages.jsx 
+         hello from message
         </div>
       {initialMessages.map((message) => (
         <p key={message.id}>{message.text}</p>

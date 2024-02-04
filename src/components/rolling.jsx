@@ -15,7 +15,7 @@ const RollingDice = ({ initialDiceValues }) => {
   };
 
   useEffect(() => {
-    // Roll the dice with a specific set of values when the component mounts
+
     rollAll(initialDiceValues);
   }, [initialDiceValues]);
 
@@ -25,6 +25,7 @@ const RollingDice = ({ initialDiceValues }) => {
       ref={reactDice}
       rollDone={rollDone}
       disableIndividual={true}
+      outlineColor={'#B59053'}
     />
   );
 };
