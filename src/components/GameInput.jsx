@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import  { toast }  from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
+import React, { useRef} from 'react';
 import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
 import {utils} from "ethers"
@@ -12,11 +13,13 @@ import {abi} from "@/contract/abi"
 import useMoonSDK  from "@/hooks/moon"
 const GameInput= ({ roomId,count }) => {
   const router = useRouter();
-  const [players, setPlayers] = useState(null);
-  const [bet, setBet] = useState(null);
+  const [players, setPlayers] = useState();
+  const [bet, setBet] = useState(0);
   const [inputValue, setInputValue] = useState('');
+  const [inputValue2, setInputValue2] = useState(''); 
   const [balValue, setbalValue] = useState('');
-  const [bet2, setBet2] = useState(null);
+  const [selectedDice, setSelectedDice] = useState(Array(5).fill(0));
+  const [bet2, setBet2] = useState(0);
   const [diceRolls, setDiceRolls] = useState({});
   const [sttx,setstx]=useState();
   let input = ''
@@ -31,13 +34,16 @@ const GameInput= ({ roomId,count }) => {
     try {
       const response = await axios.get(`/api/rooms/${roomId}`);
       const data = await response.data;
-      setPlayers(data);
-      console.log("Fetched Players:", data);
+      setPlayers(data)
 
     } catch (error) {
       console.error('Error fetching players:', error);
     }
   };
+// const hello=()=>{
+//   console.log(player2Id)
+// }
+
 
   useEffect(() => {
     fetchPlayers();
@@ -51,21 +57,54 @@ const GameInput= ({ roomId,count }) => {
   const handleInputChange = (event) => {
     setBet(Number(event.target.value));
   };
+
   const handleInputChange2 = (event) => {
     setBet2(Number(event.target.value));
   };
+  const handleInputChange4 = (event) => {
+    setInputValue2(event.target.value); // Remove Number() conversion
+  };
 
-  const processtrans = async (methods,player1Id,gamemethodtype) => {
-    console.log("so s", player1Id, player2Id)
-    const contractAddress='0x3Ea718B21872168B3BFe719DD464f6ae15567a95'
+  const reactDice = useRef('');
+  const rollDone = (totalValue, values ) => {
+    console.log('individual die values array:', values);
+    console.log('total dice value:', totalValue);
+  
+    // Find the indices with non-zero values in the values array
+    const nonZeroIndices = values.reduce((indices, value, index) => {
+      if (value > 0) {
+        indices.push(index);
+      }
+      return indices;
+    }, []);
+  
+    // Update the selectedDice state based on the nonZeroIndices
+    const updatedSelectedDice = nonZeroIndices.reduce((updatedDice, index) => {
+      updatedDice[index] = 1;
+      return updatedDice;
+    }, Array(5).fill(" "));
+  
+    setSelectedDice(updatedSelectedDice);
+  };
+
+  const toggleSelectedDice = (index) => {
+    const updatedSelectedDice = [...selectedDice];
+    updatedSelectedDice[index] = updatedSelectedDice[index] - updatedSelectedDice[index];
+    console.log(updatedSelectedDice)
+    setSelectedDice(updatedSelectedDice);
+  };
+
+
+  const processtrans = async (methods,player1Ids,gamemethodtype) => {
+    const contractAddress='0xb4231b9730b0043046548e5AF99085d5df8753E3'
     moon.updateToken(session?.accessToken);
     const contract = new ethers.Contract(contractAddress, abi);
     const method = methods;
-    const accountName =player1Id;
+    const accountName =player1Ids;
     const data = contract.interface.encodeFunctionData(method,gamemethodtype );
     console.log("Encoded Transaction Data:", data);
     const transactionData = {
-      to:"0x3Ea718B21872168B3BFe719DD464f6ae15567a95",
+      to:"0xb4231b9730b0043046548e5AF99085d5df8753E3",
       data: data,
       chain_id: "1891",
      EOA :true,
@@ -90,7 +129,7 @@ const GameInput= ({ roomId,count }) => {
 
     
     const startRound=async()=>{
-  const txhash= await processtrans('startRound',player1Id,[count+1, player1Id ,'0x1a8e16e7b0d6023cc9c106154c38ff5c721c6da7' ])
+  const txhash= await processtrans('startRound',player1Id,[count, player1Id ,player2Id ])
    setTimeout(async () => {
     await sendMessage(`Round Started${txhash}`);
   }, 4000); 
@@ -99,21 +138,19 @@ const GameInput= ({ roomId,count }) => {
   const placeBet=async(plyr,tokenAmount)=>{
      const decimalPlaces = 18;
      const rawAmount = utils.parseUnits(tokenAmount.toString(), decimalPlaces);
-   const txhash=await processtrans('placeBet',plyr,[count+1,rawAmount ])
-   console.log("bab , " ,txhash)
+   const txhash=await processtrans('placeBet',plyr,[count,rawAmount ])
+   console.log("tx , " ,txhash)
    const numberOfTokens = await decodesPoolPrize();
-   await sendMessage(`sent tokens so total pool award is ${numberOfTokens} successfully transaction ${txhash}`);
+   await sendMessage(`sent tokens 1so total pool award is ${numberOfTokens} successfully transaction ${txhash}`);
      }
 
-
-
  const decodesPoolPrize = async () => {
-  const smart='0x3Ea718B21872168B3BFe719DD464f6ae15567a95'
+  const smart='0xb4231b9730b0043046548e5AF99085d5df8753E3'
   const providerUrl = 'https://replicator.pegasus.lightlink.io/rpc/v1'; 
   const provider = new ethers.providers.JsonRpcProvider(providerUrl);
   const contract = new ethers.Contract(smart, abi,provider);
 try {
-  const result = await contract.getPoolPrize(count+1);
+  const result = await contract.getPoolPrize(count);
   console.log('Result:is burra ', result._hex);
   const hexValue = result._hex;
   const strippedHex = hexValue.replace("0x", ""); 
@@ -133,7 +170,7 @@ const RevertBet=async(plyr)=>{
   } 
 
   const requestDiceRoll=async(size,plyr)=>{
-   const txhash=await processtrans('makeRequestrollDice',plyr,[count+1,size])
+   const txhash=await processtrans('makeRequestrollDice',plyr,[count,size])
    setTimeout(async () => {
     const hexNumbers = await decodesdiceroll(plyr);
     const arrays = hexNumbers.map((num) => num.toString().replace(/^0+/, ''));
@@ -148,12 +185,12 @@ const RevertBet=async(plyr)=>{
    }
 
 const decodesdiceroll = async (player) => {
-  const smart='0x3Ea718B21872168B3BFe719DD464f6ae15567a95'
+  const smart='0xb4231b9730b0043046548e5AF99085d5df8753E3'
   const providerUrl = 'https://replicator.pegasus.lightlink.io/rpc/v1'; 
   const provider = new ethers.providers.JsonRpcProvider(providerUrl);
   const contract = new ethers.Contract(smart, abi,provider);
 try {
-  const result = await contract.getPlayerDiceRolls(count+1,player);
+  const result = await contract.getPlayerDiceRolls(count,player);
   console.log("burra , ",result)
   const hexNumbers = result.map(item => item._hex.slice(2));
   console.log('Result:', hexNumbers);
@@ -164,12 +201,12 @@ try {
 };
 
 const decodesgetScore = async () => {
-  const smart='0x3Ea718B21872168B3BFe719DD464f6ae15567a95'
+  const smart='0xb4231b9730b0043046548e5AF99085d5df8753E3'
   const providerUrl = 'https://replicator.pegasus.lightlink.io/rpc/v1'; 
   const provider = new ethers.providers.JsonRpcProvider(providerUrl);
   const contract = new ethers.Contract(smart, abi,provider);
 try {
-  const result = await contract.getScore(count+1);
+  const result = await contract.getScore(count);
   const hexNumbers = result.map(item => item._hex.slice(2));
   console.log('Hex Numbers:', hexNumbers);
   return hexNumbers;
@@ -179,22 +216,32 @@ try {
 };
 
 const RerollOnce=async(plyr,arr)=>{
-  const txhash=await processtrans('RerollOnce',plyr,[count+1,arr ])
-  console.log("bab , " ,txhash)
-  await sendMessage(`sent tokens so total pool award is successfully transaction ${txhash}`);
+  const txhash=await processtrans('RerollOnce',plyr,[count,arr ])
+  console.log("reroll , " ,txhash)
+  await sendMessage(`sent tokens rerollchance successfully transaction ${txhash}`);
     }
 
-const handleSubmit3 =async (player1Id) => {
+const handleSubmit3 =async (player2Id) => {
   const inputArray = inputValue.split(',').map(Number);
   console.log("kuu ",inputArray)
- await  RerollOnce(player1Id,inputArray)
+ await  RerollOnce(player2Id,inputArray)
   let cnt = inputArray.filter(x => x === 1).length;
- await requestDiceRoll(cnt,player1Id)
+ await requestDiceRoll(cnt,player2Id)
 };
 
+const handleSubmit4 = async (player1Id) => {
+  const inputArray = inputValue2.split(',').map(Number);
+  console.log("kuu ", inputArray);
+  await RerollOnce(player1Id, inputArray);
+  let cnt = inputArray.filter(x => x === 1).length;
+  await requestDiceRoll(cnt, player1Id);
+};
+
+
+
 const determineWinner=async()=>{
- const txhash= await processtrans('determineWinner',player1Id,[count+1]);
- const hexNumbers=await decodesgetScore(count+1);
+ const txhash= await processtrans('determineWinner',player1Id,[count]);
+ const hexNumbers=await decodesgetScore(count);
  await sendMessage(`sent tokens so total pool award is ${hexNumbers} successfully transaction ${txhash}`);
   }
 
@@ -207,7 +254,7 @@ const determineWinner=async()=>{
      value:"0",
      encoding:"utf-8",
      broadcast:true,
-  contract_address: "0x3Ea718B21872168B3BFe719DD464f6ae15567a95",
+  contract_address: "0xb4231b9730b0043046548e5AF99085d5df8753E3",
     };
     const accounts =await moon?.getErc20SDK().balanceOfErc20(accountNames,transactionData);
     console.log(accounts?.data.data)
@@ -219,50 +266,49 @@ const determineWinner=async()=>{
     <div>
    {localStorage.setItem('player1Id', players?.player1?.eoa)}
    {localStorage.setItem('player2Id', players?.player2?.eoa)}
-   
-    {session?.user?.email === players?.player1?.email && (
-   
-   <div>
-        <h3>Your Informationt:</h3>
-        Your Email: {players?.player1?.email}
-       plyr1 Your eoa:  {players?.player1?.eoa}
-     
-      </div>
-    )}
+   <div className="p-4">
+  {session?.user?.email === players?.player1?.email && (
+    <div className="bg-blue-100 p-4 rounded">
+      <h3 className="text-lg font-bold mb-2">Your Information:</h3>
+      <p>Your Email: {players?.player1?.email}</p>
+      <p>Your EOA: {players?.player1?.eoa}</p>
+    </div>
+  )}
 
-    {session?.user?.email === players?.player2?.email && (
-      <div>
-        <h3>Your Information:</h3>
-        Your Email: {players?.player2?.email}
-  Your eoa: {players?.player2?.eoa}
-     
-      </div>
-    )}
-    {session?.user?.email !== players?.player1?.email && (
-      <div>
-        <h3>Opponent's Information:</h3>
-        Opponent's Email: {players?.player1?.email}
-       play1 Your eoas: {players?.player1?.eoa}
-      </div>
-    )}
+  {session?.user?.email === players?.player2?.email && (
+    <div className="bg-green-100 p-4 mt-4 rounded">
+      <h3 className="text-lg font-bold mb-2">Your Information:</h3>
+      <p>Your Email: {players?.player2?.email}</p>
+      <p>Your EOA: {players?.player2?.eoa}</p>
+    </div>
+  )}
 
-    {session?.user?.email !== players?.player2?.email && (
-      <div>
-        <h3>Opponent's Information:</h3>
-        Opponent's Email: {players?.player2?.email}
-      playr2  Your eoasd: {players?.player2?.eoa}
-      </div>
-    )}
+  {session?.user?.email !== players?.player1?.email && (
+    <div className="bg-yellow-100 p-4 mt-4 rounded">
+      <h3 className="text-lg font-bold mb-2">Opponent's Information:</h3>
+      <p>Opponent's Email: {players?.player1?.email}</p>
+      <p>Opponent's EOA: {players?.player1?.eoa}</p>
+    </div>
+  )}
+
+  {session?.user?.email !== players?.player2?.email && (
+    <div className="bg-orange-100 p-4 mt-4 rounded">
+      <h3 className="text-lg font-bold mb-2">Opponent's Information:</h3>
+      <p>Opponent's Email: {players?.player2?.email}</p>
+      <p>Opponent's EOA: {players?.player2?.eoa}</p>
+    </div>
+  )}
+</div>
     <div>
     </div>
-
-
     <div className='flex mx-auto my-2'>
       Start Round
       {session?.user?.email === players?.player1?.email && (
         <div>
           Your token balance: {balValue}
       <button  className='bg-slate-400'  onClick={startRound}>Start Round</button>
+
+
       <label htmlFor="betInput">Enter Bet:</label>
       <input
         type="number"
@@ -273,62 +319,61 @@ const determineWinner=async()=>{
       <p>Current Bet: {bet}</p>
       <button  className='bg-orange-600 m-2'  onClick={()=>placeBet(player1Id,bet)}>place bet</button>
       <button  className='bg-green-400  m-3'  onClick={()=>requestDiceRoll(5,player1Id)}>Roll the dice</button>
-      <button  className='bg-green-400  m-3'  onClick={()=>determineWinner()}>determineWinner</button>
-<div>
-      <label htmlFor="diceInputs">Enter numbers (comma-separated):</label>
-      <input
-        type="text"
-        id="diceInputs"
-        value={inputValue}
-        onChange={handleInputChange3}
-      />
-      <button onClick={()=>handleSubmit3(player1Id)}>Reroll again</button>
-</div>
 
+      <button  className='bg-green-400  m-3'  onClick={()=>determineWinner()}>determineWinner</button>
+      <div>
+      <label htmlFor="diceInputs">Enter numbers (comma-separated):</label>
+<input
+  type="text"
+  id="diceInputs"
+  value={inputValue2} 
+  onChange={handleInputChange4}
+/>
+<button onClick={() => handleSubmit4(player1Id)}>Reroll</button>
+ 
+
+      </div>
       <button  className='bg-green-600  m-5'  onClick={()=>getTkBalance}>getbalance</button>     
       <button  className='bg-green-600  m-5'  onClick={()=>decodesPoolPrize}>GetPool prize</button>
       <button  className='bg-green-600  m-5'  onClick={()=>decodesgetScore}>GetScoreCombined</button>
-      <button  className='bg-green-600  m-5'  onClick={()=>decodesdiceroll}>YourDiceRoll</button>
       <button  className='bg-green-600  m-5'  onClick={()=>RevertBet(player1Id)}>YourDiceRoll</button>
       </div>
     )}
     <div>
-
     {Object.keys(diceRolls).map((playerId) => (
       <p key={playerId}>
-        {`Player ${playerId} rolled ${diceRolls[playerId].diceNumbers}  for size ${diceRolls[playerId].size}. Txn: ${diceRolls[playerId].txhash}`}
+        {`Player ${playerId} rolled ${diceRolls[playerId].diceNumbers}  Txn: ${diceRolls[playerId].txhash}`}
  { diceRolls[playerId].diceNumbers}
       </p>
     ))}
   </div>
+
+
       {session?.user?.email === players?.player2?.email && (
         <div>
-             Your token balance: {balValue}
-      <label htmlFor="betInput">Enter Bet:</label>
+     <label htmlFor="betInput">Enter Bet:</label>
       <input
         type="number"
         id="betInput"
         value={bet2}
-        onChange={()=>handleInputChange2}
+        onChange={handleInputChange2}
       />
-
       <p>Current Bet: {bet2}</p>
-      <button  className='bg-orange-600 m-2'  onClick={()=>placeBet(player2Id,bet2)}>place bet</button>
-      <button  className='bg-green-400  m-3'  onClick={()=>requestDiceRoll(5,player2Id)}>Roll the dice</button>
+      <button  className='bg-orange-600 m-2'  onClick={()=>placeBet(player2Id,bet2)}>places bet</button>
+      <button  className='bg-green-400  m-3'  onClick={()=>requestDiceRoll(5,player2Id)}>Rolls the dice</button>
       <div>
-      <label htmlFor="diceInputs">Enter numbers (comma-separated):</label>
+      <label htmlFor="diceInputs">Enter numbers(comma-separated for rellroll specific dice):</label>
       <input
         type="text"
         id="diceInputs"
         value={inputValue}
         onChange={handleInputChange3}
       />
-      <button onClick={()=>handleSubmit3(player1Id)}>Reroll again</button>
+      <button onClick={()=>handleSubmit3(player2Id)}>Reroll again</button>
          </div>
-      <button  className='bg-green-600  m-5'  onClick={()=>rollonce()}>ReRoll Again</button>
-
       <button  className='bg-green-600  m-5'  onClick={()=>getTkBalance}>getbalance</button>
       <button  className='bg-green-600  m-5'  onClick={()=>decodesgetScore}>GetScoreCombined</button>
+    
       </div>
     )}
   </div>
