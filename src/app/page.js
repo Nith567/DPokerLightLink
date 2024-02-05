@@ -51,6 +51,7 @@ export default function Home() {
             Get ETH Account
           </button>
           The acc address is you set is {acc || "Not available yet"}
+          
           <div>
             <button
               className="bg-green-500 text-white rounded p-2 m-3 hover:bg-green-600 transition"

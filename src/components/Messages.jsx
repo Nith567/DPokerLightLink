@@ -3,27 +3,24 @@ import { pusherClient } from '@/app/lib/pusher'
 import { FC, useEffect, useState } from 'react'
 
 const Messages = ({ initialMessages, roomId }) => {
-
-  const [incomingMessages, setIncomingMessages] = useState([])
+  const [incomingMessages, setIncomingMessages] = useState([]);
 
   useEffect(() => {
-    pusherClient.subscribe(roomId)
+    pusherClient.subscribe(roomId);
 
-    pusherClient.bind('incoming-message', (text) => {
-      setIncomingMessages((prev) => [...prev, text])
-    })
+    pusherClient.bind('incoming-message', (message) => {
+      setIncomingMessages((prev) => [...prev, message]);
+    });
+  
 
     return () => {
-      pusherClient.unsubscribe(roomId)
-    }
-  }, [])
+      pusherClient.unsubscribe(roomId);
+    };
+  }, [roomId]);
 
-  
+ 
   return (
     <div>
-        <div>
-         hello from message
-        </div>
       {initialMessages.map((message) => (
         <p key={message.id}>{message.text}</p>
       ))}
@@ -34,4 +31,4 @@ const Messages = ({ initialMessages, roomId }) => {
   )
 }
 
-export default Messages
+export default Messages;

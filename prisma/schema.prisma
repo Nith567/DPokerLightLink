@@ -37,9 +37,10 @@ model GameRoom {
 
 model Game {
   id        String   @id @default(cuid())
-  text        Json  
+  text        String 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  arr Int?
   gameRoom   GameRoom @relation("GameRoomGames", fields: [gameRoomId], references: [id])
   gameRoomId String
 }
