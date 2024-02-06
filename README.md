@@ -1,4 +1,4 @@
-DICE LIGHTLINKCHAIN
+DICE LIGHTLINKCHAIN(nextjs+prismadb+pusher channel+USEMOONAI SDK
 Here is the final results where the user 1 has won 1000k DPK crypto token after successfull rounds :
 https://pegasus.lightlink.io/tx/0x03808ea2431dd0e07ba2d0fe8ecf859c1cfcf8464fb28b348f23600455e770fb
 
