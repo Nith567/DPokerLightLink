@@ -7,3 +7,7 @@ The contract DICEPOKERGAME given 1000DPK to the  winner :0x99F5F819ce26480732523
 
 
 Link to the PPT: https://www.canva.com/design/DAF7wCqj034/I4qJd2SJ4xyoiYRDHeNCKA/edit?utm_content=DAF7wCqj034&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
+You can see all the transaction few are rolling dice for first time, also rerolling the dice for selected dice example in the demo the first user got 6,1,6,6,6 still he went for reroll for the second dice '1' to expect five of a kind..
+Track all transcations happened here:
+https://pegasus.lightlink.io/address/0xb4231b9730b0043046548e5AF99085d5df8753E3?tab=token_transfers here is the total pool prize of two players in three rounds of worth 1000DPK tokens
