@@ -13,3 +13,17 @@ Track all transcations happened here:
 https://pegasus.lightlink.io/address/0xb4231b9730b0043046548e5AF99085d5df8753E3?tab=token_transfers here is the total pool prize of two players in three rounds of worth 1000DPK tokens
 
 <img width="1201" alt="Screenshot 2024-02-06 at 10 08 18 AM" src="https://github.com/Nith567/DiceLightLink/assets/91722732/27571314-0cc8-4464-9a61-2b628c21eb38">
+
+
+Ranking of cards:
+From the lowest to the highest:
+
+nothing Nothing — five mismatched dice forming no sequence longer than four.
+pair Pair — two dice showing the same value.
+2 pairs Two Pairs — two pairs of dice, each showing the same value.
+nothing Three-of-a-Kind — three dice showing the same value.
+5 high straight Five High Straight — dice showing values from 1 through 5, inclusive.
+6 high straight Six High Straight — dice showing values from 2 through 6, inclusive.
+full house Full House — Pair of one value and Three-of-a-Kind of another.
+4 of a kind Four-of-a-Kind — four dice showing the same value.
+5 of a kind Five-of-a-Kind — all five dice showing the same value.
