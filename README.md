@@ -30,4 +30,17 @@ full house Full House — Pair of one value and Three-of-a-Kind of another.
 4 of a kind Four-of-a-Kind — four dice showing the same value.
 5 of a kind Five-of-a-Kind — all five dice showing the same value.
 ```
+First user need to signup through their emailId, login all done by the useMoonai sdk where it generates a profile 
 
+<img width="1005" alt="Screenshot 2024-02-09 at 6 35 47 PM" src="https://github.com/Nith567/DiceLightLink/assets/91722732/7ce8a600-7214-4c7d-98e6-6667f136d7a5">
+
+Then you need to create an account with just one click to get wallet address, tnx to usemoonai sdk
+
+<img width="684" alt="Screenshot 2024-02-09 at 6 38 35 PM" src="https://github.com/Nith567/DiceLightLink/assets/91722732/01e740da-e610-4eb1-9baa-cee157eada39">
+<img width="487" alt="Screenshot 2024-02-09 at 6 45 58 PM" src="https://github.com/Nith567/DiceLightLink/assets/91722732/b16e7b2c-7d2a-4abb-b192-96c02d38ca72">
+
+After the setup you can either create a room and join a room :
+<img width="1088" alt="Screenshot 2024-02-09 at 6 39 40 PM" src="https://github.com/Nith567/DiceLightLink/assets/91722732/565e0a2a-37e3-43a4-a6d0-bf2060d00127">
+
+This is it where you can start the game, where all witcher dice poker game rules are followed, follow this video if you aren't familiar
+https://www.youtube.com/watch?v=ewqAtvDZHeo
