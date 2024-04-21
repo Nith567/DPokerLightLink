@@ -5,9 +5,6 @@ https://pegasus.lightlink.io/tx/0x03808ea2431dd0e07ba2d0fe8ecf859c1cfcf8464fb28b
 Details of DPK token:0xb4231b9730b0043046548e5AF99085d5df8753E3
 The contract DICEPOKERGAME given 1000DPK to the  winner :0x99F5F819ce26480732523f0a195B51424ece71Ca
 
-
-Link to the PPT: https://www.canva.com/design/DAF7wCqj034/I4qJd2SJ4xyoiYRDHeNCKA/edit?utm_content=DAF7wCqj034&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
-
 You can see all the transaction, few of them are for rolling dice for first time, also rerolling the dice for selected dice example shown in the demo, we see in demo the first user got 6,1,6,6,6(four of a kind) still he went for reroll for the second dice '1'(to change 2nd dice,we internally take this as an array of which second position marking it as '1' requesting the length which is one in this case) to expect five of a kind and get five of a kind to get all hightime rank.Well for few functions we would like to automate in future,even for transferring coins directly to winners, without need to claim.
 Track all transcations happened here:
 https://pegasus.lightlink.io/address/0xb4231b9730b0043046548e5AF99085d5df8753E3?tab=token_transfers here is the total pool prize of two players in three rounds of worth 1000DPK tokens
